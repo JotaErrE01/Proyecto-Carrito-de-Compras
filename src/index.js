@@ -4,7 +4,6 @@ import './css/normalize.css';
 import './css/skeleton.css';
 import './css/custom.css';
 
-
 //variables 
 const carrito = document.querySelector('#carrito');
 const contenedorCarrito = document.querySelector('#lista-carrito tbody');
@@ -15,6 +14,11 @@ let articulosCarrito = [];
 cargarEventListeners();
 
 function cargarEventListeners(){
+    document.addEventListener('DOMContentLoaded', _ => {
+        articulosCarrito = JSON.parse(localStorage.getItem('carrito')) || [];
+        carritoHtml();
+    });
+
     listaCursos.addEventListener('click', agregarCurso);//ojo que flipas
 
     //eliminar curso
@@ -34,7 +38,6 @@ function agregarCurso(e){
     if(id){
         const curso = e.target.parentElement.parentElement;
         leerDatosCurso(curso, id);
-
     }
 }
 
@@ -81,8 +84,6 @@ function leerDatosCurso(curso, id){
     carritoHtml();
 }
 
-
-
 //Genera el carrito en el html
 function carritoHtml(){
 
@@ -106,7 +107,9 @@ function carritoHtml(){
             </td>
         `;
         contenedorCarrito.appendChild(row);
-    });    
+    });  
+    
+    sincronizarStorage();
 
 }
 
@@ -120,4 +123,9 @@ function limpiarHtml(){
     while(contenedorCarrito.firstChild){
         contenedorCarrito.removeChild(contenedorCarrito.firstChild);
     }
+}
+
+//guardar en localStorage
+function sincronizarStorage(){
+    localStorage.setItem('carrito', JSON.stringify(articulosCarrito));
 }
